@@ -1,6 +1,12 @@
-// lambdas/calls/joinMeeting.js
-const { chime } = require("../../config/aws");
+/*****************************************************
+ * lambdas/calls/joinMeeting.js - Using ChimeClient v3
+ *****************************************************/
+const { chimeClient } = require("../../config/aws");
+const {
+    CreateAttendeeCommand
+} = require("@aws-sdk/client-chime");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
+// const { protectRoute } = require("../../utils/authUtils");
 
 module.exports.joinMeeting = async (event) => {
     try {
@@ -12,7 +18,7 @@ module.exports.joinMeeting = async (event) => {
             ExternalUserId: attendeeName,
         };
 
-        const response = await chime.createAttendee(params).promise();
+        const response = await chimeClient.send(new CreateAttendeeCommand(params));
 
         return successResponse({
             attendee: response.Attendee,

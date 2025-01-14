@@ -11,6 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-chime": "^3.726.1",
+    "@aws-sdk/client-dynamodb": "^3.726.1",
+    "@aws-sdk/lib-dynamodb": "^3.726.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",

@@ -11,14 +11,15 @@ provider:
 package:
   excludeDevDependencies: true
   exclude:
-    - node_modules/aws-sdk/**  # Exclude local aws-sdk
-    - .git/**                  # Exclude git metadata
-    - .serverless/**           # Exclude cached deployments
-    - test/**                  # Exclude test files
+    # Remove the line below if you want; it won't matter if aws-sdk is not installed:
+    - node_modules/aws-sdk/**
+    - .git/**
+    - .serverless/**
+    - test/**
   include:
-    - config/**                # Include your configuration files
-    - lambdas/**               # Include your Lambda functions
-    - utils/**                 # Include your utility files
+    - config/**
+    - lambdas/**
+    - utils/**
 
 functions:
   testSdk:
@@ -27,6 +28,7 @@ functions:
       - http:
           path: test-sdk
           method: get
+
   # Authentication Functions
   signup:
     handler: lambdas/auth/signup.signup

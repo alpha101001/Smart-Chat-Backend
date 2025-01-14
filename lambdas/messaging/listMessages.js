@@ -1,4 +1,6 @@
-// lambdas/messaging/listMessages.js
+/*****************************************************
+ * lambdas/messaging/listMessages.js - DynamoDBDocumentClient
+ *****************************************************/
 const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 // const { protectRoute } = require("../../utils/authUtils");
@@ -18,7 +20,8 @@ module.exports.listMessages = async (event) => {
             ExclusiveStartKey: lastEvaluatedKey || undefined,
         };
 
-        const response = await dynamoDBClient.query(params).promise();
+        // docClient.query returns { Items, LastEvaluatedKey } on success
+        const response = await dynamoDBClient.query(params);
 
         return successResponse({
             messages: response.Items || [],

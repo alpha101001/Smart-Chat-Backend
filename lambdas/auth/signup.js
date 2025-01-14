@@ -1,4 +1,6 @@
-// lambdas/auth/signup.js
+/*****************************************************
+ * lambdas/auth/signup.js - Using DynamoDBDocumentClient
+ *****************************************************/
 const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 
@@ -10,11 +12,11 @@ module.exports.signup = async (event) => {
             TableName: "Users",
             Item: {
                 userId: email,
-                password, // in production, store a hashed password
+                password, // In production, store a hashed password
             },
         };
 
-        await dynamoDBClient.put(params).promise();
+        await dynamoDBClient.put(params);
 
         return successResponse({ message: "User registered successfully" }, 201);
     } catch (error) {

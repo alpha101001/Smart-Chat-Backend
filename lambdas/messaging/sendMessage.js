@@ -1,4 +1,6 @@
-// lambdas/messaging/sendMessage.js
+/*****************************************************
+ * lambdas/messaging/sendMessage.js - DynamoDBDocumentClient
+ *****************************************************/
 const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 const { v4: uuidv4 } = require("uuid");
@@ -21,7 +23,7 @@ module.exports.sendMessage = async (event) => {
             },
         };
 
-        await dynamoDBClient.put(params).promise();
+        await dynamoDBClient.put(params);
 
         return successResponse(
             { message: "Message sent successfully", messageId },

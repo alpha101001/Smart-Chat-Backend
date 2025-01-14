@@ -1,5 +1,10 @@
-// lambdas/calls/createMeeting.js
-const { chime } = require("../../config/aws");
+/*****************************************************
+ * lambdas/calls/createMeeting.js - Using ChimeClient v3
+ *****************************************************/
+const { chimeClient } = require("../../config/aws");
+const {
+    CreateMeetingCommand
+} = require("@aws-sdk/client-chime");
 const { protectRoute } = require("../../utils/authUtils");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 
@@ -16,12 +21,16 @@ module.exports.createMeeting = async (event) => {
             ExternalMeetingId: meetingTitle,
         };
 
-        const response = await chime.createMeeting(params).promise();
+        // v3 call
+        const response = await chimeClient.send(new CreateMeetingCommand(params));
 
-        return successResponse({
-            meeting: response.Meeting,
-            message: "Meeting created successfully",
-        }, 201);
+        return successResponse(
+            {
+                meeting: response.Meeting,
+                message: "Meeting created successfully",
+            },
+            201
+        );
     } catch (error) {
         return errorResponse("Error creating meeting: " + error.message, 500);
     }

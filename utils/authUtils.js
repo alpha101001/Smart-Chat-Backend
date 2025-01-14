@@ -1,4 +1,6 @@
-// utils/authUtils.js
+/*****************************************************
+ * utils/authUtils.js
+ *****************************************************/
 const { verifyToken } = require("../config/jwt");
 
 /**

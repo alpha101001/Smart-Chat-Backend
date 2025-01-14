@@ -1,19 +1,37 @@
-// config/aws.js
-const AWS = require("aws-sdk");
-console.log("Using AWS SDK Version:", AWS.VERSION); // Debug log
+/*****************************************************
+ * config/aws.js - Using AWS SDK v3
+ *****************************************************/
 require("dotenv").config();
-// Optional: set region from environment
-AWS.config.update({
-    region: process.env.REGION || "us-east-1",
-});
 
-// For DynamoDB, use DocumentClient v2
-const dynamoDBClient = new AWS.DynamoDB.DocumentClient();
+// 1. Import the v3 DynamoDBClient & DocumentClient
+const {
+    DynamoDBClient
+} = require("@aws-sdk/client-dynamodb");
+const {
+    DynamoDBDocumentClient
+} = require("@aws-sdk/lib-dynamodb");
 
-// For Chime (v2)
-// const chime = new AWS.Chime();
+// 2. Import Chime v3 client
+const {
+    ChimeClient
+} = require("@aws-sdk/client-chime");
 
+// Configure region via environment or fallback
+const region = process.env.REGION || "us-east-1";
+
+// Create the low-level DynamoDB client
+const dynamoClient = new DynamoDBClient({ region });
+
+// Create a DocumentClient wrapper around the low-level client
+const dynamoDBClient = DynamoDBDocumentClient.from(dynamoClient);
+
+// Create a Chime client
+// NOTE: You may need to supply credentials or other config
+// if you're using it outside of a Lambda with IAM roles
+const chimeClient = new ChimeClient({ region });
+
+// Export for usage in other files
 module.exports = {
     dynamoDBClient,
-    // chime,
+    chimeClient
 };

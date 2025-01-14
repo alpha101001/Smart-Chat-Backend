@@ -1,4 +1,6 @@
-// lambdas/auth/login.js
+/*****************************************************
+ * lambdas/auth/login.js - Using DynamoDBDocumentClient
+ *****************************************************/
 const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 const { signToken } = require("../../config/jwt");
@@ -12,8 +14,9 @@ module.exports.login = async (event) => {
             Key: { userId: email },
         };
 
-        // v2 call:
-        const data = await dynamoDBClient.get(params).promise();
+        // Using the DocumentClient v3 style
+        const data = await dynamoDBClient.get(params);
+
         if (!data.Item) {
             return errorResponse("User not found", 404);
         }

@@ -1,4 +1,6 @@
-// lambdas/messaging/createChat.js
+/*****************************************************
+ * lambdas/messaging/createChat.js - DynamoDBDocumentClient
+ *****************************************************/
 const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 // Optionally: const { protectRoute } = require("../../utils/authUtils");
@@ -14,11 +16,12 @@ module.exports.createChat = async (event) => {
             Item: {
                 chatId,
                 chatName,
-                participants, // if you need a StringSet, you'd do e.g. participants: dynamoDBClient.createSet(participants)
+                // If you need a StringSet, you'd do something else with marshalling
+                participants,
             },
         };
 
-        await dynamoDBClient.put(params).promise();
+        await dynamoDBClient.put(params);
 
         return successResponse(
             { message: "Chat created successfully", chatId },

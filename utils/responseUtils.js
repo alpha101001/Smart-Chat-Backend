@@ -1,5 +1,6 @@
-// utils/responseUtils.js
-
+/*****************************************************
+ * utils/responseUtils.js
+ *****************************************************/
 exports.successResponse = (data, statusCode = 200) => ({
     statusCode,
     headers: {
