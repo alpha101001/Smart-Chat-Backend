@@ -1,7 +1,7 @@
 # Cache or build outputs from your project tools
 .serverless/ # Already included
 .cache/       # For Vite/Parcel bundling if used in your React config
-
+serverless.yml
 # Frontend-related
 .vite          # Vite (React build tool)
 dist/          # If build files for React aren't excluded
