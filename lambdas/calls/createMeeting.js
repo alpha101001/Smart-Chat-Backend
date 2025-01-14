@@ -1,16 +1,11 @@
-const { chimeClient } = require("../../config/aws");
-const { CreateMeetingCommand } = require("@aws-sdk/client-chime-sdk-meetings");
+// lambdas/calls/createMeeting.js
+const { chime } = require("../../config/aws");
 const { protectRoute } = require("../../utils/authUtils");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 
-/**
- * Creates a new Chime meeting
- * Expects event.body: { clientRequestToken, meetingTitle }
- * Also requires Authorization header with Bearer token
- */
-exports.createMeeting = async (event) => {
+module.exports.createMeeting = async (event) => {
     try {
-        // Protect the route
+        // Check JWT if you want the route to be protected
         protectRoute(event.headers);
 
         const { clientRequestToken, meetingTitle } = JSON.parse(event.body);
@@ -21,7 +16,7 @@ exports.createMeeting = async (event) => {
             ExternalMeetingId: meetingTitle,
         };
 
-        const response = await chimeClient.send(new CreateMeetingCommand(params));
+        const response = await chime.createMeeting(params).promise();
 
         return successResponse({
             meeting: response.Meeting,

@@ -1,12 +1,8 @@
-const { docClient } = require("../../config/aws");
-const { PutCommand } = require("@aws-sdk/lib-dynamodb");
+// lambdas/auth/signup.js
+const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 
-/**
- * Signup function
- * Expects event.body to have { email, password }
- */
-exports.signup = async (event) => {
+module.exports.signup = async (event) => {
     try {
         const { email, password } = JSON.parse(event.body);
 
@@ -14,11 +10,11 @@ exports.signup = async (event) => {
             TableName: "Users",
             Item: {
                 userId: email,
-                password: password,  // In production, store hashed password
+                password, // in production, store a hashed password
             },
         };
 
-        await docClient.send(new PutCommand(params));
+        await dynamoDBClient.put(params).promise();
 
         return successResponse({ message: "User registered successfully" }, 201);
     } catch (error) {

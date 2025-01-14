@@ -1,6 +1,6 @@
+// config/jwt.js
 const jwt = require("jsonwebtoken");
 
-// JWT secret key from environment variable
 const SECRET_KEY = process.env.JWT_SECRET || "default_secret";
 
 module.exports = {

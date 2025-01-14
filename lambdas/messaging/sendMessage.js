@@ -1,32 +1,32 @@
-const { docClient } = require("../../config/aws");
-const { PutCommand } = require("@aws-sdk/lib-dynamodb");
+// lambdas/messaging/sendMessage.js
+const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 const { v4: uuidv4 } = require("uuid");
 // const { protectRoute } = require("../../utils/authUtils");
 
-exports.sendMessage = async (event) => {
+module.exports.sendMessage = async (event) => {
     try {
         // protectRoute(event.headers);
         const { chatId, senderId, content } = JSON.parse(event.body);
-        const messageId = uuidv4();
 
+        const messageId = uuidv4();
         const params = {
             TableName: "Messages",
             Item: {
-                messageId: messageId,
-                chatId: chatId,
-                senderId: senderId,
-                content: content,
+                messageId,
+                chatId,
+                senderId,
+                content,
                 timestamp: Date.now(),
             },
         };
 
-        await docClient.send(new PutCommand(params));
+        await dynamoDBClient.put(params).promise();
 
-        return successResponse({
-            message: "Message sent successfully",
-            messageId,
-        }, 201);
+        return successResponse(
+            { message: "Message sent successfully", messageId },
+            201
+        );
     } catch (error) {
         return errorResponse("Error sending message: " + error.message, 500);
     }

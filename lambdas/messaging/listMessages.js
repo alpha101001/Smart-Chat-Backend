@@ -1,9 +1,9 @@
-const { docClient } = require("../../config/aws");
-const { QueryCommand } = require("@aws-sdk/lib-dynamodb");
+// lambdas/messaging/listMessages.js
+const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
 // const { protectRoute } = require("../../utils/authUtils");
 
-exports.listMessages = async (event) => {
+module.exports.listMessages = async (event) => {
     try {
         // protectRoute(event.headers);
         const { chatId, limit = 10, lastEvaluatedKey } = JSON.parse(event.body);
@@ -18,7 +18,7 @@ exports.listMessages = async (event) => {
             ExclusiveStartKey: lastEvaluatedKey || undefined,
         };
 
-        const response = await docClient.send(new QueryCommand(params));
+        const response = await dynamoDBClient.query(params).promise();
 
         return successResponse({
             messages: response.Items || [],

@@ -1,20 +1,18 @@
-const { chimeClient } = require("../../config/aws");
-const { CreateAttendeeCommand } = require("@aws-sdk/client-chime-sdk-meetings");
+// lambdas/calls/joinMeeting.js
+const { chime } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
-// Optionally use protectRoute if you want to require auth
-// const { protectRoute } = require("../../utils/authUtils");
 
-exports.joinMeeting = async (event) => {
+module.exports.joinMeeting = async (event) => {
     try {
         // protectRoute(event.headers);
         const { meetingId, attendeeName } = JSON.parse(event.body);
 
         const params = {
             MeetingId: meetingId,
-            ExternalUserId: attendeeName, // A unique identifier for the attendee
+            ExternalUserId: attendeeName,
         };
 
-        const response = await chimeClient.send(new CreateAttendeeCommand(params));
+        const response = await chime.createAttendee(params).promise();
 
         return successResponse({
             attendee: response.Attendee,
