@@ -1,0 +1,123 @@
+service: serverless-chat
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    JWT_SECRET: "dark_chat_@25"  # Updated to match code
+    REGION: "us-east-1"
+
+package:
+  excludeDevDependencies: true
+  exclude:
+    - node_modules/@aws-sdk/**  # AWS SDK is available in Lambda environment by default
+  include:
+    - node_modules/**
+
+functions:
+  # Authentication Functions
+  signup:
+    handler: lambdas/auth/signup.signup
+    events:
+      - http:
+          path: auth/signup
+          method: post
+
+  login:
+    handler: lambdas/auth/login.login
+    events:
+      - http:
+          path: auth/login
+          method: post
+
+  # Messaging Functions
+  createChat:
+    handler: lambdas/messaging/createChat.createChat
+    events:
+      - http:
+          path: messaging/createChat
+          method: post
+
+  sendMessage:
+    handler: lambdas/messaging/sendMessage.sendMessage
+    events:
+      - http:
+          path: messaging/sendMessage
+          method: post
+
+  listMessages:
+    handler: lambdas/messaging/listMessages.listMessages
+    events:
+      - http:
+          path: messaging/listMessages
+          method: post
+
+  # Call-Related Functions
+  createMeeting:
+    handler: lambdas/calls/createMeeting.createMeeting
+    events:
+      - http:
+          path: calls/createMeeting
+          method: post
+
+  joinMeeting:
+    handler: lambdas/calls/joinMeeting.joinMeeting
+    events:
+      - http:
+          path: calls/joinMeeting
+          method: post
+
+  endMeeting:
+    handler: lambdas/calls/endMeeting.endMeeting
+    events:
+      - http:
+          path: calls/endMeeting
+          method: post
+
+resources:
+  Resources:
+    # Users Table
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Users
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    # Chats Table
+    ChatsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Chats
+        AttributeDefinitions:
+          - AttributeName: chatId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: chatId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    # Messages Table
+    MessagesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Messages
+        AttributeDefinitions:
+          - AttributeName: messageId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: messageId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
