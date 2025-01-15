@@ -5,8 +5,8 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   environment:
-    REGION: us-east-1
-    JWT_SECRET: dark_chat_@25
+    REGION: ${env:REGION}
+    JWT_SECRET: ${env:JWT_SECRET}
   iam:
     role:
       statements:
@@ -14,7 +14,7 @@ provider:
           Action:
             - dynamodb:PutItem
           Resource:
-            - arn:aws:dynamodb:us-east-1:539247462080:table/Users
+            - ${env:DYNAMODB_USERS_TABLE_ARN}
 
 package:
   excludeDevDependencies: true
