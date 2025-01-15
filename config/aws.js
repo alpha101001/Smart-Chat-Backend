@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, TranslateConfig } = require("@aws-sdk/lib-dynamodb");
-const { ChimeClient } = require("@aws-sdk/client-chime");
+const { ChimeSDKMeetingsClient } = require("@aws-sdk/client-chime-sdk-meetings"); // Updated client
 
 // Configure the AWS region
 const region = process.env.REGION || "us-east-1";
@@ -23,10 +23,13 @@ const translateConfig = {
 
 const dynamoDBClient = DynamoDBDocumentClient.from(dynamoClient, translateConfig);
 
-// Create the Chime client
-const chimeClient = new ChimeClient({ region });
+// Create the Chime SDK Meetings client with the regional endpoint
+const chimeSDKMeetingsClient = new ChimeSDKMeetingsClient({
+    region,
+    endpoint: `https://meetings-chime.${region}.amazonaws.com`, // Regional endpoint
+});
 
 module.exports = {
     dynamoDBClient, // Export the correctly configured `DynamoDBDocumentClient`
-    chimeClient,
+    chimeSDKMeetingsClient,
 };

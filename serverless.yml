@@ -13,18 +13,20 @@ provider:
         - Effect: Allow
           Action:
             - dynamodb:PutItem
-          Resource:
-            - arn:aws:dynamodb:us-east-1:539247462080:table/Users
-        - Effect: Allow
-          Action:
+            - dynamodb:GetItem
             - dynamodb:Query
           Resource:
+            - arn:aws:dynamodb:us-east-1:539247462080:table/Users
             - arn:aws:dynamodb:us-east-1:539247462080:table/Users/index/deviceIdIndex
+
+        # Add permissions for Chime SDK
         - Effect: Allow
           Action:
-            - dynamodb:GetItem
+            - chime:CreateMeeting
+            - chime:DeleteMeeting
+            - chime:CreateAttendee
           Resource:
-            - arn:aws:dynamodb:us-east-1:539247462080:table/Users
+            - arn:aws:chime:us-east-1:539247462080:meeting/*
 
 
 package:
