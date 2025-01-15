@@ -3,10 +3,10 @@
  *****************************************************/
 const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
-
+const { PutCommand } = require("@aws-sdk/lib-dynamodb");
 module.exports.signup = async (event) => {
     try {
-        // Highlighted Modification: Add try-catch block for JSON parsing
+        // Highlighted Modification: Add JSON parse error handling
         let parsedBody;
         try {
             parsedBody = JSON.parse(event.body);
@@ -14,28 +14,28 @@ module.exports.signup = async (event) => {
             return errorResponse("Invalid JSON payload", 400);
         }
 
-        // Highlighted Modification: Validate email and password
         const { email, password } = parsedBody;
+
+        // Highlighted Modification: Validate email and password
         if (!email || !password) {
             return errorResponse("Email and password are required", 400);
         }
 
-        // Highlighted Modification: Define DynamoDB put parameters
+        // Highlighted Modification: Define parameters for DynamoDB `put`
         const params = {
             TableName: "Users",
             Item: {
                 userId: email,
-                password, // In production, store a hashed password
+                password, // In production, hash the password before storing
             },
         };
 
-        // Highlighted Modification: Use the `put` method from DynamoDBDocumentClient
-        await dynamoDBClient.put(params);
+        // Highlighted Modification: Use `PutCommand` with `send`
+        await dynamoDBClient.send(new PutCommand(params)); // Explicitly send PutCommand
 
-        // Highlighted Modification: Return success response on successful user registration
         return successResponse({ message: "User registered successfully" }, 201);
     } catch (error) {
-        // Highlighted Modification: Return descriptive error response
+        // Highlighted Modification: Return descriptive error message
         return errorResponse("Error registering user: " + error.message, 500);
     }
 };
