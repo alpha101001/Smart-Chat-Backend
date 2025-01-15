@@ -1,3 +1,3 @@
-#javascript
-#serverless
-#dynamodb
+**javascript**\
+**serverless**\
+**dynamodb**
