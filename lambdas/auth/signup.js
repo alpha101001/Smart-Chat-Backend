@@ -1,12 +1,13 @@
 /*****************************************************
- * lambdas/auth/signup.js - Using DynamoDBDocumentClient
+ * lambdas/auth/signup.js
  *****************************************************/
 const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
-const { PutCommand } = require("@aws-sdk/lib-dynamodb");
+const { GetCommand, PutCommand, QueryCommand } = require("@aws-sdk/lib-dynamodb");
+const bcrypt = require("bcryptjs");
+
 module.exports.signup = async (event) => {
     try {
-        // Highlighted Modification: Add JSON parse error handling
         let parsedBody;
         try {
             parsedBody = JSON.parse(event.body);
@@ -14,28 +15,83 @@ module.exports.signup = async (event) => {
             return errorResponse("Invalid JSON payload", 400);
         }
 
-        const { email, password } = parsedBody;
+        // Updated schema fields
+        const {
+            name,
+            userName,
+            userEmail,
+            password,
+            dateOfBirth
+        } = parsedBody;
 
-        // Highlighted Modification: Validate email and password
-        if (!email || !password) {
-            return errorResponse("Email and password are required", 400);
+        //  Validate new fields
+        if (!name || !userName || !userEmail || !password || !dateOfBirth) {
+            return errorResponse(
+                "All fields (name, userName, userEmail, password, dateOfBirth) are required",
+                400
+            );
         }
 
-        // Highlighted Modification: Define parameters for DynamoDB `put`
-        const params = {
+        // Obtain deviceId from a header
+        const deviceId = event.headers["x-device-id"];
+        if (!deviceId) {
+            return errorResponse("Device ID is required", 400);
+        }
+
+        // Check how many accounts exist for this deviceId (requires GSI)
+        const queryParams = {
             TableName: "Users",
-            Item: {
-                userId: email,
-                password, // In production, hash the password before storing
+            IndexName: "deviceIdIndex", // GSI with deviceId as PK
+            KeyConditionExpression: "deviceId = :d",
+            ExpressionAttributeValues: {
+                ":d": deviceId
+            }
+        };
+        const queryResult = await dynamoDBClient.send(new QueryCommand(queryParams));
+        if (queryResult.Count >= 3) {
+            return errorResponse("Maximum of 3 accounts reached on this device", 403);
+        }
+
+        // Check if userEmail already exists
+        const getUserParams = {
+            TableName: "Users",
+            Key: {
+                userId: userEmail
             },
         };
+        const existingUser = await dynamoDBClient.send(new GetCommand(getUserParams));
+        if (existingUser.Item) {
+            return errorResponse("User already exists", 400);
+        }
 
-        // Highlighted Modification: Use `PutCommand` with `send`
-        await dynamoDBClient.send(new PutCommand(params)); // Explicitly send PutCommand
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        return successResponse({ message: "User registered successfully" }, 201);
+        // HIGHLIGHTED: Generate a verification code
+        const verificationCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+        // Insert new user
+        const putParams = {
+            TableName: "Users",
+            Item: {
+                userId: userEmail,
+                name,
+                userName,
+                userEmail,
+                password: hashedPassword,
+                dateOfBirth,
+                deviceId,          //  Save deviceId
+                verificationCode,  // Save verification code
+            },
+        };
+        await dynamoDBClient.send(new PutCommand(putParams));
+
+        return successResponse({
+            message: "User registered successfully",
+            verificationCode
+        }, 201);
+
     } catch (error) {
-        // Highlighted Modification: Return descriptive error message
         return errorResponse("Error registering user: " + error.message, 500);
     }
 };

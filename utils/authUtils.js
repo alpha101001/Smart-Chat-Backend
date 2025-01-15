@@ -22,3 +22,5 @@ exports.protectRoute = (headers) => {
 
     return verifyToken(token); // returns decoded payload if valid
 };
+
+

@@ -18,3 +18,5 @@ exports.errorResponse = (message, statusCode = 500) => ({
     },
     body: JSON.stringify({ error: message }),
 });
+
+

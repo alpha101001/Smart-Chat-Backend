@@ -1,0 +1,6 @@
+{
+  "headers": {
+    "x-device-id": "test-device-123"
+  },
+  "body": "{\"name\":\"Test User\",\"userName\":\"tester123\",\"userEmail\":\"test12@example.com\",\"password\":\"password123\",\"dateOfBirth\":\"1990-01-01\"}"
+}

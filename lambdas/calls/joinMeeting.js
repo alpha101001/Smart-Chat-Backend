@@ -28,3 +28,5 @@ module.exports.joinMeeting = async (event) => {
         return errorResponse("Error adding attendee: " + error.message, 500);
     }
 };
+
+

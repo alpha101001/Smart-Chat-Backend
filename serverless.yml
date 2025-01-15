@@ -15,6 +15,17 @@ provider:
             - dynamodb:PutItem
           Resource:
             - arn:aws:dynamodb:us-east-1:539247462080:table/Users
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+          Resource:
+            - arn:aws:dynamodb:us-east-1:539247462080:table/Users/index/deviceIdIndex
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+          Resource:
+            - arn:aws:dynamodb:us-east-1:539247462080:table/Users
+
 
 package:
   excludeDevDependencies: true
@@ -106,9 +117,21 @@ resources:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
+          - AttributeName: deviceId      # HIGHLIGHTED
+            AttributeType: S             # HIGHLIGHTED
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
+        GlobalSecondaryIndexes: # HIGHLIGHTED
+          - IndexName: deviceIdIndex
+            KeySchema:
+              - AttributeName: deviceId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
