@@ -33,3 +33,5 @@ module.exports.sendMessage = async (event) => {
         return errorResponse("Error sending message: " + error.message, 500);
     }
 };
+
+

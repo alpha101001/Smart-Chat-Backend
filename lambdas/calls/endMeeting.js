@@ -24,3 +24,5 @@ module.exports.endMeeting = async (event) => {
         return errorResponse("Error ending meeting: " + error.message, 500);
     }
 };
+
+

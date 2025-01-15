@@ -35,3 +35,4 @@ module.exports.createMeeting = async (event) => {
         return errorResponse("Error creating meeting: " + error.message, 500);
     }
 };
+

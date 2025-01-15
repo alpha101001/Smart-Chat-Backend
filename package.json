@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "lambdas/auth/signup.js",
+  "main": "handler.js",
   "scripts": {
     "clean": "rm -rf node_modules pnpm-lock.yaml",
     "install-deps": "pnpm install --shamefully-hoist",

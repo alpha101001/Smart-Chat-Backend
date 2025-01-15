@@ -31,3 +31,5 @@ module.exports.createChat = async (event) => {
         return errorResponse("Error creating chat: " + error.message, 500);
     }
 };
+
+
