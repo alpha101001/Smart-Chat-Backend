@@ -69,3 +69,21 @@ module.exports.login = async (event) => {
         return errorResponse("Error logging in: " + error.message, 500);
     }
 };
+
+
+/** response sample:
+ * {
+ *   "statusCode": 200,
+ *   "headers": {
+ *     "Content-Type": "application/json",
+ *     "Access-Control-Allow-Origin": "*"
+ *   },
+ *   "body": {
+ *     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzM2OTM2NzI1LCJleHAiOjE3MzY5NDAzMjV9.-ZfJl0lM92a7vcJXzwSMt_473VVyOyLFcM-RkvKr9Xg",
+ *     "name": "Test User",
+ *     "userName": "tester123",
+ *     "userEmail": "test@example.com",
+ *     "dateOfBirth": "1990-01-01"
+ *   }
+ * }
+ */

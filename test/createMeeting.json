@@ -1,3 +1,6 @@
 {
+  "headers": {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0MTJAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzY5NTI5NTksImV4cCI6MTczNjk1NjU1OX0.3pcnjQCMGykXwGrauJI2CGqoFVas0M3XDptIUNYGzmY"
+  },
   "body": "{\"clientRequestToken\": \"unique-token-123\", \"meetingTitle\": \"Test Meeting\"}"
 }

@@ -95,3 +95,18 @@ module.exports.signup = async (event) => {
         return errorResponse("Error registering user: " + error.message, 500);
     }
 };
+
+
+/** response sample:
+ * {
+ *   "statusCode": 201,
+ *   "headers": {
+ *     "Content-Type": "application/json",
+ *     "Access-Control-Allow-Origin": "*"
+ *   },
+ *   "body": {
+ *     "message": "User registered successfully",
+ *     "verificationCode": "ABCD12"
+ *   }
+ * }
+ */
