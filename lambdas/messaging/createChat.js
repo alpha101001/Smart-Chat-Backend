@@ -1,24 +1,27 @@
-const { docClient } = require("../../config/aws");
-const { PutCommand } = require("@aws-sdk/lib-dynamodb");
+/*****************************************************
+ * lambdas/messaging/createChat.js - DynamoDBDocumentClient
+ *****************************************************/
+const { dynamoDBClient } = require("../../config/aws");
 const { successResponse, errorResponse } = require("../../utils/responseUtils");
-const { protectRoute } = require("../../utils/authUtils");
+// Optionally: const { protectRoute } = require("../../utils/authUtils");
 
-exports.createChat = async (event) => {
+module.exports.createChat = async (event) => {
     try {
-        // optional: protectRoute(event.headers);
+        // protectRoute(event.headers);
         const { chatName, participants } = JSON.parse(event.body);
         const chatId = `chat-${Date.now()}`;
 
         const params = {
             TableName: "Chats",
             Item: {
-                chatId: chatId,
-                chatName: chatName,
-                participants: participants, // if you need a Set, be mindful with docClient
+                chatId,
+                chatName,
+                // If you need a StringSet, you'd do something else with marshalling
+                participants,
             },
         };
 
-        await docClient.send(new PutCommand(params));
+        await dynamoDBClient.put(params);
 
         return successResponse(
             { message: "Chat created successfully", chatId },

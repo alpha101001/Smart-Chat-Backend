@@ -1,0 +1,144 @@
+service: serverless-chat
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    REGION: us-east-1
+    JWT_SECRET: dark_chat_@25
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+          Resource:
+            - arn:aws:dynamodb:us-east-1:539247462080:table/Users
+
+package:
+  excludeDevDependencies: true
+  exclude:
+    # Remove the line below if you want; it won't matter if aws-sdk is not installed:
+    - node_modules/aws-sdk/**
+    - .git/**
+    - .serverless/**
+    - test/**
+  include:
+    - config/**
+    - lambdas/**
+    - utils/**
+
+functions:
+  testSdk:
+    handler: lambdas/test-sdk.handler
+    events:
+      - http:
+          path: test-sdk
+          method: get
+
+  # Authentication Functions
+  signup:
+    handler: lambdas/auth/signup.signup
+    events:
+      - http:
+          path: auth/signup
+          method: post
+
+  login:
+    handler: lambdas/auth/login.login
+    events:
+      - http:
+          path: auth/login
+          method: post
+
+  # Messaging Functions
+  createChat:
+    handler: lambdas/messaging/createChat.createChat
+    events:
+      - http:
+          path: messaging/createChat
+          method: post
+
+  sendMessage:
+    handler: lambdas/messaging/sendMessage.sendMessage
+    events:
+      - http:
+          path: messaging/sendMessage
+          method: post
+
+  listMessages:
+    handler: lambdas/messaging/listMessages.listMessages
+    events:
+      - http:
+          path: messaging/listMessages
+          method: post
+
+  # Call-Related Functions
+  createMeeting:
+    handler: lambdas/calls/createMeeting.createMeeting
+    events:
+      - http:
+          path: calls/createMeeting
+          method: post
+
+  joinMeeting:
+    handler: lambdas/calls/joinMeeting.joinMeeting
+    events:
+      - http:
+          path: calls/joinMeeting
+          method: post
+
+  endMeeting:
+    handler: lambdas/calls/endMeeting.endMeeting
+    events:
+      - http:
+          path: calls/endMeeting
+          method: post
+
+resources:
+  Resources:
+    # Users Table
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Users
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    # Chats Table
+    ChatsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Chats
+        AttributeDefinitions:
+          - AttributeName: chatId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: chatId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    # Messages Table
+    MessagesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Messages
+        AttributeDefinitions:
+          - AttributeName: messageId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: messageId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5

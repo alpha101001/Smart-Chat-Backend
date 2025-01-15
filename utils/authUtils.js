@@ -1,10 +1,13 @@
+/*****************************************************
+ * utils/authUtils.js
+ *****************************************************/
 const { verifyToken } = require("../config/jwt");
 
 /**
  * Protects an API route by validating the Authorization header.
- * @param {Object} headers - The headers object (e.g., event.headers).
- * @returns {Object} Decoded token if valid
- * @throws {Error} If token is missing or invalid
+ * @param {Object} headers - The headers object from API Gateway
+ * @returns Decoded token if valid
+ * @throws Error if token missing or invalid
  */
 exports.protectRoute = (headers) => {
     const authHeader = headers.Authorization || headers.authorization;
@@ -17,5 +20,5 @@ exports.protectRoute = (headers) => {
         throw new Error("Token is missing");
     }
 
-    return verifyToken(token);
+    return verifyToken(token); // returns decoded payload if valid
 };
