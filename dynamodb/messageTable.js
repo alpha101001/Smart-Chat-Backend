@@ -8,8 +8,14 @@ const client = new DynamoDBClient({ region: "us-east-1" });
 const createMessageTable = async () => {
     const params = {
         TableName: "Messages",
-        KeySchema: [{ AttributeName: "messageId", KeyType: "HASH" }],
-        AttributeDefinitions: [{ AttributeName: "messageId", AttributeType: "S" }],
+        KeySchema: [
+            { AttributeName: "chatId", KeyType: "HASH" },
+            { AttributeName: "messageId", KeyType: "RANGE" }
+        ],
+        AttributeDefinitions: [
+            { AttributeName: "chatId", AttributeType: "S" },
+            { AttributeName: "messageId", AttributeType: "S" }
+        ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 5,
             WriteCapacityUnits: 5,

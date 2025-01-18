@@ -1,0 +1,6 @@
+{
+  "headers": {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0MTJAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzcyMDMwMjQsImV4cCI6MTczNzIwNjYyNH0.Om2NIz02m2bDRiRS9vynVhINWovbDrCK7r6a3XX47CI"
+  },
+  "body": "{\"chatId\": \"chat-dce78bda-fa3d-4c36-bbc7-29b6a4df222c\", \"limit\": 10}"
+}
