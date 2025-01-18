@@ -18,6 +18,8 @@ provider:
           Resource:
             - arn:aws:dynamodb:us-east-1:539247462080:table/Users
             - arn:aws:dynamodb:us-east-1:539247462080:table/Users/index/deviceIdIndex
+            - arn:aws:dynamodb:us-east-1:539247462080:table/Chats
+            - arn:aws:dynamodb:us-east-1:539247462080:table/Messages
 
         # Add permissions for Chime SDK
         - Effect: Allow

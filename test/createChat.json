@@ -1,0 +1,6 @@
+{
+  "headers": {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0MTJAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzcyMDQ1ODEsImV4cCI6MTczNzIwODE4MX0.6JByxzDY2yrOZ_n_y3i3zVMQnwNOwUfn2vQ2YpsViD0"
+  },
+  "body": "{\"chatName\": \"Project Discussion\", \"participants\": [\"user1@example.com\", \"user2@example.com\"]}"
+}
