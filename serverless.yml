@@ -3,10 +3,10 @@ service: serverless-chat
 provider:
   name: aws
   runtime: nodejs18.x
-  region: us-east-1
+  region: ${env:REGION}
   environment:
-    REGION: us-east-1
-    JWT_SECRET: dark_chat_@25
+    REGION: ${env:REGION}
+    JWT_SECRET: ${env:JWT_SECRET}
   iam:
     role:
       statements:
@@ -16,10 +16,10 @@ provider:
             - dynamodb:GetItem
             - dynamodb:Query
           Resource:
-            - arn:aws:dynamodb:us-east-1:539247462080:table/Users
-            - arn:aws:dynamodb:us-east-1:539247462080:table/Users/index/deviceIdIndex
-            - arn:aws:dynamodb:us-east-1:539247462080:table/Chats
-            - arn:aws:dynamodb:us-east-1:539247462080:table/Messages
+            - arn:aws:dynamodb:${env:REGION}:${env:AWS_ACCOUNT_ID}:table/Users
+            - arn:aws:dynamodb:${env:REGION}:${env:AWS_ACCOUNT_ID}:table/Users/index/deviceIdIndex
+            - arn:aws:dynamodb:${env:REGION}:${env:AWS_ACCOUNT_ID}:table/Chats
+            - arn:aws:dynamodb:${env:REGION}:${env:AWS_ACCOUNT_ID}:table/Messages
 
         # Add permissions for Chime SDK
         - Effect: Allow
@@ -28,7 +28,7 @@ provider:
             - chime:DeleteMeeting
             - chime:CreateAttendee
           Resource:
-            - arn:aws:chime:us-east-1:539247462080:meeting/*
+            - arn:aws:chime:${env:REGION}:${env:AWS_ACCOUNT_ID}:meeting/*
 
 
 package:
